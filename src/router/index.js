@@ -51,30 +51,8 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '看板', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'example',
-    meta: { title: '示例', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: '表格', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '树', icon: 'tree' }
-      }
-    ]
   },
 
   {
@@ -99,13 +77,8 @@ export const asyncRoutes = [
   {
     path: '/nested',
     component: Layout,
-    redirect: '/nested/menu1',
     name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested',
-      roles: ['ROLE_TEST']
-    },
+    meta: { title: 'Nested', icon: 'nested', roles: ['ROLE_TEST'] },
     children: [
       {
         path: 'menu1',
@@ -163,6 +136,33 @@ export const asyncRoutes = [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/system',
+    component: Layout,
+    name: 'System',
+    meta: { title: '系统配置', icon: 'el-icon-s-help', roles: ['ROLE_ADMIN'] },
+    children: [
+      {
+        path: 'user',
+        name: 'User',
+        component: () => import('@/views/system/user.vue'),
+        meta: { title: '用户管理', icon: 'user' }
+      },
+      {
+        path: 'role',
+        name: 'Role',
+        component: () => import('@/views/system/role.vue'),
+        meta: { title: '角色管理', icon: 'table' }
+      },
+      {
+        path: 'tree',
+        name: 'Tree',
+        component: () => import('@/views/tree/index'),
+        meta: { title: '权限管理', icon: 'tree' }
       }
     ]
   },

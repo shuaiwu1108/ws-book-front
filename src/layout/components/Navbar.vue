@@ -9,7 +9,7 @@
         <div class="avatar-wrapper">
           <!--          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">-->
           <span class="user-avatar">{{ name }}</span>
-          <i class="el-icon-caret-bottom" />
+          <i class="el-icon-caret-right" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <router-link to="/">
