@@ -159,10 +159,10 @@ export const asyncRoutes = [
         meta: { title: '角色管理', icon: 'table' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: '权限管理', icon: 'tree' }
+        path: 'menu',
+        name: 'Menu',
+        component: () => import('@/views/system/menu.vue'),
+        meta: { title: '菜单管理', icon: 'menu' }
       }
     ]
   },
