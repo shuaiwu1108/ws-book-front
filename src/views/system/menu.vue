@@ -6,6 +6,7 @@
       </el-button>
     </div>
     <el-table
+      ref="singleTable"
       v-loading="listLoading"
       :data="list"
       row-key="id"
@@ -13,6 +14,8 @@
       border
       fit
       highlight-current-row
+      @current-change="handleCurrentChange"
+      @row-dblclick="setCurrent"
     >
       <el-table-column align="center" label="序号" width="95" type="index" />
       <el-table-column label="路径" property="path" />
@@ -102,13 +105,23 @@ export default {
         status: [{ required: true, message: '状态必填', trigger: 'change' }],
         hidden: [{ required: true, message: '隐藏必填', trigger: 'change' }]
       },
-      statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }]
+      statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }],
+      selectRow: {}
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    setCurrent(){
+      this.$refs.singleTable.setCurrentRow();
+      this.selectRow = {}
+    },
+    handleCurrentChange(row) {
+      if(row != null) {
+        this.selectRow = Object.assign({}, row)
+      }
+    },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -147,6 +160,8 @@ export default {
     },
     handleCreate() {
       this.resetTemp()
+      this.temp.parentId = this.selectRow.id
+      this.temp.id = undefined
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -155,6 +170,7 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
+      console.log(this.temp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
