@@ -30,3 +30,24 @@ export function allRoles() {
     method: 'get'
   })
 }
+
+export function queryRolePermission(roleId) {
+  return request({
+    url: '/rolesMenu/queryRolePermission',
+    method: 'get',
+    params: {
+      roleId: roleId
+    }
+  })
+}
+
+export function saveMenuPermission(roleId, menuIds) {
+  return request({
+    url: '/rolesMenu/saveMenuPermission',
+    method: 'post',
+    data: {
+      roleId: roleId,
+      menuIds: menuIds
+    }
+  })
+}

@@ -19,7 +19,7 @@
     >
       <el-table-column align="center" label="序号" width="95" type="index" />
       <el-table-column label="路径" property="path" />
-      <el-table-column label="名称" align="center" property="name" />
+<!--      <el-table-column label="名称" align="center" property="name" />-->
       <el-table-column label="标题" align="center" property="title" />
       <el-table-column label="图标" align="center" property="icon" />
       <el-table-column label="组件" property="component" />
@@ -100,8 +100,8 @@ export default {
       },
       temp: {},
       rules: {
-        path: [{ required: true, message: '地址必填', trigger: 'blur' }],
-        name: [{ required: true, message: '名称必填', trigger: 'blur' }],
+        path: [{ required: true, message: '路径必填', trigger: 'blur' }],
+        component: [{ required: true, message: '组件必填', trigger: 'blur' }],
         status: [{ required: true, message: '状态必填', trigger: 'change' }],
         hidden: [{ required: true, message: '隐藏必填', trigger: 'change' }]
       },
@@ -113,12 +113,12 @@ export default {
     this.fetchData()
   },
   methods: {
-    setCurrent(){
-      this.$refs.singleTable.setCurrentRow();
+    setCurrent() {
+      this.$refs.singleTable.setCurrentRow()
       this.selectRow = {}
     },
     handleCurrentChange(row) {
-      if(row != null) {
+      if (row != null) {
         this.selectRow = Object.assign({}, row)
       }
     },

@@ -28,9 +28,8 @@
       <el-table-column align="center" label="更新时间" property="updateTime" />
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template v-slot:="{row}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
-            编辑
-          </el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button type="primary" size="mini" @click="menuPermissionDrawer(row)">权限配置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -60,11 +59,33 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-drawer
+      title="编辑权限"
+      :visible.sync="drawer"
+      direction="rtl"
+      size="30%">
+      <div class="drawer__content">
+        <el-tree
+          :data="treeMenuList"
+          show-checkbox
+          node-key="id"
+          :default-checked-keys="menuIds"
+          :props="defaultProps"
+          @check="checkTree"
+        >
+        </el-tree>
+        <div class="drawer__footer">
+          <el-button @click="drawer = false;loading = false">取 消</el-button>
+          <el-button type="primary" @click="saveMenuPermission" :loading="loading">{{ loading ? '提交中 ...' : '确 定' }}</el-button>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import { getList, createRole, updateRole } from '@/api/role'
+import { getList, createRole, updateRole, queryRolePermission, saveMenuPermission } from '@/api/role'
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
 
@@ -98,13 +119,45 @@ export default {
         rolename: [{ required: true, message: '角色名必填', trigger: 'blur' }],
         status: [{ required: true, message: '状态必填', trigger: 'change' }]
       },
-      statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }]
+      statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }],
+      drawer: false,
+      treeMenuList: [],
+      menuIds: [],
+      defaultProps: {
+        children: 'children',
+        label: 'title'
+      },
+      loading: false
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    checkTree(data1, data2) {
+      this.menuIds = data2.checkedKeys
+    },
+    saveMenuPermission() {
+      this.loading = true
+      saveMenuPermission(this.temp.id, this.menuIds).then(response => {
+        this.loading = false
+        this.drawer = false
+        this.$notify({
+          title: '成功',
+          message: '保存成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    menuPermissionDrawer(row) {
+      this.drawer = true
+      this.temp = Object.assign({}, row)
+      queryRolePermission(this.temp.id).then(response => {
+        this.treeMenuList = response.data.treeMenuList
+        this.menuIds = response.data.menuIds
+      })
+    },
     isActive(row, column, cellValue, index) {
       if (cellValue) {
         return '是'
@@ -205,3 +258,6 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+  @import '@/styles/drawer.scss';
+</style>
