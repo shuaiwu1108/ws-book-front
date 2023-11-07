@@ -1,4 +1,5 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import { asyncRoutes, constantRoutes, webRoutes } from '@/router'
+import Layout from '@/layout/index.vue'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -47,18 +48,62 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit }, roles) {
+  generateRoutes({ commit, state }, tmp) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (roles.includes('admin')) {
+      if (tmp.roleCodes.includes('DMIN')) {
         accessedRoutes = asyncRoutes || []
       } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        // accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+        accessedRoutes = generatorRoutesByTreeMenus(tmp.treeMenus)
+        accessedRoutes.forEach(tmp => {
+          if (tmp.children.length > 0) {
+            tmp.component = Layout
+          } else {
+            tmp.component = Layout
+            if (tmp.redirect === '/dashboard') {
+              tmp.redirect = '/dashboard'
+              tmp.children = {
+                path: tmp.redirect,
+                component: webRoutes[tmp.component],
+                meta: tmp.meta
+              }
+              tmp.meta = undefined
+            } else {
+              tmp.children = {
+                path: 'index',
+                component: webRoutes[tmp.component],
+                meta: tmp.meta
+              }
+              tmp.meta = undefined
+            }
+          }
+        })
+        console.log(accessedRoutes)
       }
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
   }
+}
+
+export function generatorRoutesByTreeMenus(treeMenus) {
+  const res = []
+  treeMenus.forEach((tmp) => {
+    const routerNode = {
+      path: tmp.path,
+      component: webRoutes[tmp.component],
+      meta: {
+        title: tmp.title,
+        icon: tmp.icon
+      }
+    }
+    if (tmp.children !== undefined && tmp.children !== null && tmp.children.length > 0) {
+      routerNode.children = generatorRoutesByTreeMenus(tmp.children)
+    }
+    res.push(routerNode)
+  })
+  return res
 }
 
 export default {

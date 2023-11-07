@@ -7,7 +7,8 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    treeMenus: []
   }
 }
 
@@ -28,6 +29,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_TREEMENUS: (state, treeMenus) => {
+    state.treeMenus = treeMenus
   }
 }
 
@@ -37,7 +41,6 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        console.log(response)
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
@@ -58,16 +61,17 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { roles, name, avatar } = data
+        const { roleCodes, name, avatar, treeMenus } = data
 
         // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
+        if (!roleCodes || roleCodes.length <= 0) {
           reject('getInfo: roles must be a non-null array!')
         }
 
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', roleCodes)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_TREEMENUS', treeMenus)
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -79,7 +83,6 @@ const actions = {
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       logout(state.token).then(() => {
-        console.log('logout succ')
         removeToken() // must remove  token  first
         resetRouter()
         commit('RESET_STATE')
