@@ -105,7 +105,7 @@ export default {
   data() {
     return {
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -262,7 +262,9 @@ export default {
         this.list = response.data
         this.listLoading = false
         this.total = response.data.length
-      })
+      }).catch(
+        this.listLoading = false
+      )
     },
     handleDownload() {
       this.downloadLoading = true
