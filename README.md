@@ -10,7 +10,8 @@
 >- 计划增加：quartz管理功能
 
 ## 配套使用的后端系统
-* [项目](https://github.com/shuaiwu1108/ws-book)
+* [后端](https://github.com/shuaiwu1108/ws-book)
+* [移动端](https://github.com/shuaiwu1108/ws-book-front-app)
 
 
 ## 编译开发
