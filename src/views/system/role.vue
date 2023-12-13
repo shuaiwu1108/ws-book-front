@@ -125,7 +125,7 @@ export default {
       menuIds: [],
       defaultProps: {
         children: 'children',
-        label: 'title'
+        label: 'name'
       },
       loading: false
     }

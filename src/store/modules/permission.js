@@ -1,6 +1,4 @@
-import { asyncRoutes, constantRoutes, webRoutes } from '@/router'
-import Layout from '@/layout/index.vue'
-
+import { constantRoutes, routeList } from '@/router'
 /**
  * Use meta.role to determine if the current user has permission
  * @param roles
@@ -48,39 +46,10 @@ const mutations = {
 }
 
 const actions = {
-  generateRoutes({ commit, state }, tmp) {
+  generateRoutes({ commit, state }, treeMenus) {
     return new Promise(resolve => {
-      let accessedRoutes
-      if (tmp.roleCodes.includes('DMIN')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        // accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-        accessedRoutes = generatorRoutesByTreeMenus(tmp.treeMenus)
-        accessedRoutes.forEach(tmp => {
-          if (tmp.children.length > 0) {
-            tmp.component = Layout
-          } else {
-            tmp.component = Layout
-            if (tmp.redirect === '/dashboard') {
-              tmp.redirect = '/dashboard'
-              tmp.children = {
-                path: tmp.redirect,
-                component: webRoutes[tmp.component],
-                meta: tmp.meta
-              }
-              tmp.meta = undefined
-            } else {
-              tmp.children = {
-                path: 'index',
-                component: webRoutes[tmp.component],
-                meta: tmp.meta
-              }
-              tmp.meta = undefined
-            }
-          }
-        })
-        console.log(accessedRoutes)
-      }
+      const accessedRoutes = generatorRoutesByTreeMenus(treeMenus)
+      accessedRoutes.push(routeList['error'])
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
@@ -90,14 +59,7 @@ const actions = {
 export function generatorRoutesByTreeMenus(treeMenus) {
   const res = []
   treeMenus.forEach((tmp) => {
-    const routerNode = {
-      path: tmp.path,
-      component: webRoutes[tmp.component],
-      meta: {
-        title: tmp.title,
-        icon: tmp.icon
-      }
-    }
+    const routerNode = routeList[tmp.code]
     if (tmp.children !== undefined && tmp.children !== null && tmp.children.length > 0) {
       routerNode.children = generatorRoutesByTreeMenus(tmp.children)
     }

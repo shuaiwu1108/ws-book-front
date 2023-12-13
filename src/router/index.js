@@ -2,10 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 Vue.use(Router)
-
-/* Layout */
 import Layout from '@/layout'
-
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -24,101 +21,75 @@ import Layout from '@/layout'
     activeMenu: '/example/list'  if set path, the sidebar will highlight the path you set
   }
  */
-
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
 export const constantRoutes = [
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   }
-  //
-  // {
-  //   path: '/',
-  //   component: Layout,
-  //   redirect: '/dashboard',
-  //   children: [{
-  //     path: '/dashboard',
-  //     component: () => import('@/views/dashboard/index'),
-  //     meta: { title: '首页', icon: 'dashboard' }
-  //   }]
-  // },
-  //
-  // {
-  //   path: '/form',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/form/index'),
-  //       meta: { title: '表单', icon: 'form' }
-  //     }
-  //   ]
-  // }
-]
-
-/**
- * asyncRoutes
- * the routes that need to be dynamically loaded based on user roles
- */
-export const asyncRoutes = [
-  {
-    path: '/system',
-    component: Layout,
-    meta: { title: '系统配置', icon: 'el-icon-s-help', roles: ['ROLE_ADMIN'] },
-    children: [
-      {
-        path: 'user',
-        component: () => import('@/views/system/user.vue'),
-        meta: { title: '用户管理', icon: 'user' }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/system/role.vue'),
-        meta: { title: '角色管理', icon: 'el-icon-s-custom' }
-      },
-      {
-        path: 'menu',
-        component: () => import('@/views/system/menu.vue'),
-        meta: { title: '菜单管理', icon: 'table' }
-      }
-    ]
-  },
-
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
 }
 
-export const webRoutes = {
-  dashboard: () => import('@/views/dashboard/index'),
-  form: () => import('@/views/form/index'),
-  menu: () => import('@/views/system/menu.vue'),
-  user: () => import('@/views/system/user.vue'),
-  role: () => import('@/views/system/role.vue')
-}
-
 export default router
+
+// 新增加的页面修需要改此处，对象中的key需要与数据库中的code保持一致
+export const routeList = {
+  // 一级菜单
+  index: {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [{
+      path: '/dashboard',
+      component: () => import('@/views/dashboard/index'),
+      meta: { title: '首页', icon: 'dashboard' }
+    }]
+  },
+  form: {
+    path: '/form',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/form/index'),
+      meta: { title: '表单', icon: 'form' }
+    }]
+  },
+  system: {
+    path: '/system',
+    component: Layout,
+    meta: { title: '系统配置', icon: 'el-icon-s-help' }
+  },
+  // 二级菜单
+  user: {
+    path: 'user',
+    component: () => import('@/views/system/user.vue'),
+    meta: { title: '用户管理', icon: 'user' }
+  },
+  role: {
+    path: 'role',
+    component: () => import('@/views/system/role.vue'),
+    meta: { title: '角色管理', icon: 'el-icon-s-custom' }
+  },
+  menu: {
+    path: 'menu',
+    component: () => import('@/views/system/menu.vue'),
+    meta: { title: '菜单管理', icon: 'table' }
+  },
+  error: { path: '*', redirect: '/404', hidden: true } // 404页面放在最后
+}

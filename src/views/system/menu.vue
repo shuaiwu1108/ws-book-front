@@ -18,13 +18,8 @@
       @row-dblclick="setCurrent"
     >
       <el-table-column align="center" label="序号" width="95" type="index" />
-      <el-table-column label="路径" property="path" />
-<!--      <el-table-column label="名称" align="center" property="name" />-->
-      <el-table-column label="标题" align="center" property="title" />
-      <el-table-column label="图标" align="center" property="icon" />
-      <el-table-column label="组件" property="component" />
-      <el-table-column label="是否有效" property="status" :formatter="isActive" />
-      <el-table-column label="是否隐藏" property="hidden" :formatter="isActive" />
+      <el-table-column label="编码" property="code" />
+      <el-table-column label="名称" align="center" property="name" />
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template v-slot:="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">
@@ -38,30 +33,11 @@
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="路径" prop="path">
-          <el-input v-model="temp.path" />
+        <el-form-item label="编码" prop="code">
+          <el-input v-model="temp.code" />
         </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="temp.name" />
-        </el-form-item>
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="图标" prop="icon">
-          <el-input v-model="temp.icon" />
-        </el-form-item>
-        <el-form-item label="组件" prop="component">
-          <el-input v-model="temp.component" />
-        </el-form-item>
-        <el-form-item label="启用" prop="status">
-          <el-select v-model="temp.status" class="filter-item" placeholder="请选择" style="width: 100%">
-            <el-option v-for="item in statusOptions" :key="item.num" :label="item.name" :value="item.num" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="隐藏" prop="hidden">
-          <el-select v-model="temp.hidden" class="filter-item" placeholder="请选择" style="width: 100%">
-            <el-option v-for="item in statusOptions" :key="item.num" :label="item.name" :value="item.num" />
-          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -100,10 +76,8 @@ export default {
       },
       temp: {},
       rules: {
-        path: [{ required: true, message: '路径必填', trigger: 'blur' }],
-        component: [{ required: true, message: '组件必填', trigger: 'blur' }],
-        status: [{ required: true, message: '状态必填', trigger: 'change' }],
-        hidden: [{ required: true, message: '隐藏必填', trigger: 'change' }]
+        code: [{ required: true, message: '编码必填', trigger: 'blur' }],
+        name: [{ required: true, message: '名称必填', trigger: 'blur' }]
       },
       statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }],
       selectRow: {}
@@ -176,13 +150,6 @@ export default {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
-    },
-    isActive(row, column, cellValue, index) {
-      if (cellValue) {
-        return '是'
-      } else {
-        return '否'
-      }
     },
     fetchData() {
       this.listQuery.page = 1
