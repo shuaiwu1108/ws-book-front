@@ -9,7 +9,9 @@
     <div class="video-container" :style="'height:' + windowsHeight+ 'px'">
       <el-row v-for="row in rows" :gutter="5">
         <el-col v-for="col in cols" :span="colSpan">
-          <div class="video-col" :style="'height:' + colHeight + 'px'"></div>
+          <div class="video-col" :style="'height:' + colHeight + 'px'">
+            <video class="video" controls autoplay></video>
+          </div>
         </el-col>
       </el-row>
     </div>
@@ -57,7 +59,7 @@ export default {
 <style lang="scss" scoped>
 .video-container {
   width: 100%;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 .video-col {
@@ -65,5 +67,11 @@ export default {
   width: 100%;
   border-radius: 5px;
   margin-bottom: 5px;
+}
+.video{
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  object-fit: cover;
 }
 </style>
