@@ -1,14 +1,17 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.username" clearable placeholder="用户名" style="width: 200px;" class="filter-item" @keyup.enter.native="fetchData" />
+      <el-input v-model="listQuery.username" clearable placeholder="用户名" style="width: 200px;" class="filter-item"
+                @keyup.enter.native="fetchData"/>
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="fetchData">
         搜索
       </el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">
+      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit"
+                 @click="handleCreate">
         增加
       </el-button>
-      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+      <el-button :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
+                 @click="handleDownload">
         导出
       </el-button>
     </div>
@@ -20,14 +23,14 @@
       fit
       highlight-current-row
     >
-      <el-table-column align="center" label="序号" width="95" type="index" />
-      <el-table-column label="用户名" align="center" property="username" />
-      <el-table-column label="密码" align="center" property="password" />
-      <el-table-column label="邮箱" align="center" property="email" />
-      <el-table-column label="手机号" align="center" property="phone" />
-      <el-table-column label="是否启用" align="center" property="status" :formatter="isActive" />
-      <el-table-column label="创建时间" align="center" property="createTime" />
-      <el-table-column align="center" label="更新时间" property="updateTime" />
+      <el-table-column align="center" label="序号" width="95" type="index"/>
+      <el-table-column label="用户名" align="center" property="username"/>
+      <el-table-column v-if="false" label="密码" align="center" property="password"/>
+      <el-table-column label="邮箱" align="center" property="email"/>
+      <el-table-column label="手机号" align="center" property="phone"/>
+      <el-table-column label="是否启用" align="center" property="status" :formatter="isActive"/>
+      <el-table-column label="创建时间" align="center" property="createTime"/>
+      <el-table-column align="center" label="更新时间" property="updateTime"/>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template v-slot:="{row}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">编辑</el-button>
@@ -37,26 +40,28 @@
     </el-table>
 
     <!-- 分页组件 -->
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
+                @pagination="fetchData"/>
 
     <!-- 新增与修改弹框 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px" style="width: 400px; margin-left:50px;">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="80px"
+               style="width: 400px; margin-left:50px;">
         <el-form-item label="用户名" prop="username">
-          <el-input v-model="temp.username" />
+          <el-input v-model="temp.username"/>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="temp.password" placeholder="默认密码为用户名" />
+          <el-input v-model="temp.password" type="password" placeholder="默认密码为用户名"/>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="temp.email" />
+          <el-input v-model="temp.email"/>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="temp.phone" />
+          <el-input v-model="temp.phone"/>
         </el-form-item>
         <el-form-item label="是否启用" prop="status">
           <el-select v-model="temp.status" class="filter-item" placeholder="请选择" style="width: 100%;">
-            <el-option v-for="item in statusOptions" :key="item.num" :label="item.name" :value="item.num" />
+            <el-option v-for="item in statusOptions" :key="item.num" :label="item.name" :value="item.num"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -72,13 +77,14 @@
 
     <!-- 角色配置弹框 -->
     <el-dialog title="角色配置" :visible.sync="dialogFormVisibleHandleRole" :before-close="clearUserRole">
-      <el-form ref="dataFormUserRole" :model="tempUserRole" label-position="left" label-width="70px" style="width: 400px; margin-left:50px;">
+      <el-form ref="dataFormUserRole" :model="tempUserRole" label-position="left" label-width="70px"
+               style="width: 400px; margin-left:50px;">
         <el-form-item label="用户名">
-          <el-input v-model="tempUserRole.username" readonly />
+          <el-input v-model="tempUserRole.username" readonly/>
         </el-form-item>
         <el-form-item label="用户角色">
           <el-select v-model="roleIds" class="filter-item" placeholder="请选择" multiple style="width: 100%;">
-            <el-option v-for="item in rolesOptions" :key="item.id" :label="item.rolename" :value="item.id" />
+            <el-option v-for="item in rolesOptions" :key="item.id" :label="item.rolename" :value="item.id"/>
           </el-select>
         </el-form-item>
       </el-form>
@@ -95,13 +101,13 @@
 </template>
 
 <script>
-import { getList, createUser, updateUser, getUserRoles, saveUserRoles } from '@/api/user'
-import { parseTime } from '@/utils'
+import {getList, createUser, updateUser, getUserRoles, saveUserRoles} from '@/api/user'
+import {parseTime} from '@/utils'
 import Pagination from '@/components/Pagination/index.vue'
-import { allRoles } from '@/api/role'
+import {allRoles} from '@/api/role'
 
 export default {
-  components: { Pagination },
+  components: {Pagination},
   data() {
     return {
       tableKey: 0,
@@ -138,10 +144,10 @@ export default {
         roleIds: []
       },
       rules: {
-        username: [{ required: true, message: '用户名必填', trigger: 'blur' }],
-        status: [{ required: true, message: '状态必填', trigger: 'change' }]
+        username: [{required: true, message: '用户名必填', trigger: 'blur'}],
+        status: [{required: true, message: '状态必填', trigger: 'change'}]
       },
-      statusOptions: [{ 'num': 1, 'name': '是' }, { 'num': 0, 'name': '否' }],
+      statusOptions: [{'num': 1, 'name': '是'}, {'num': 0, 'name': '否'}],
       rolesOptions: [],
       roleIds: []
     }

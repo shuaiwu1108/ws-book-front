@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 import Layout from '@/layout'
+
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -35,7 +36,7 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })
 
@@ -58,7 +59,7 @@ export const routeList = {
     children: [{
       path: '/dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: '首页', icon: 'dashboard' }
+      meta: {title: '首页', icon: 'dashboard'}
     }]
   },
   form: {
@@ -67,29 +68,38 @@ export const routeList = {
     children: [{
       path: 'index',
       component: () => import('@/views/form/index'),
-      meta: { title: '表单', icon: 'form' }
+      meta: {title: '表单', icon: 'form'}
+    }]
+  },
+  video: {
+    path: '/video',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/video/video.vue'),
+      meta: {title: '监控视频', icon: 'el-icon-video-camera-solid'}
     }]
   },
   system: {
     path: '/system',
     component: Layout,
-    meta: { title: '系统配置', icon: 'el-icon-s-help' }
+    meta: {title: '系统配置', icon: 'el-icon-s-help'}
   },
   // 二级菜单
   user: {
     path: 'user',
     component: () => import('@/views/system/user.vue'),
-    meta: { title: '用户管理', icon: 'user' }
+    meta: {title: '用户管理', icon: 'user'}
   },
   role: {
     path: 'role',
     component: () => import('@/views/system/role.vue'),
-    meta: { title: '角色管理', icon: 'el-icon-s-custom' }
+    meta: {title: '角色管理', icon: 'el-icon-s-custom'}
   },
   menu: {
     path: 'menu',
     component: () => import('@/views/system/menu.vue'),
-    meta: { title: '菜单管理', icon: 'table' }
+    meta: {title: '菜单管理', icon: 'table'}
   },
-  error: { path: '*', redirect: '/404', hidden: true } // 404页面放在最后
+  error: {path: '*', redirect: '/404', hidden: true} // 404页面放在最后
 }
