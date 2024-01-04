@@ -10,7 +10,7 @@
       <el-row v-for="row in rows" :gutter="5">
         <el-col v-for="col in cols" :span="colSpan">
           <div class="video-col" :style="'height:' + colHeight + 'px'">
-            <video class="video" controls autoplay></video>
+            <video v-if="videos.length >= (row - 1) * cols + (col - 1)" class="video" controls autoplay loop :src="videos[(row - 1) * cols + (col - 1)].equipAddr"></video>
           </div>
         </el-col>
       </el-row>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import {getEquips} from "@/api/video";
 export default {
   name: 'Video',
   data() {
@@ -28,8 +29,12 @@ export default {
       rows: 1,
       cols: 1,
       colSpan: 24,
-      colHeight: 0
+      colHeight: 0,
+      videos: []
     }
+  },
+  created() {
+    this.getEquips()
   },
   mounted() {
     this.$nextTick(() => {
@@ -51,6 +56,12 @@ export default {
       this.cols = (v + 0.6) | 0
       this.colSpan = 24 / this.cols
       this.colHeight = this.windowsHeight / this.rows
+    },
+    getEquips() {
+      getEquips().then(response => {
+        this.videos = response.data
+        console.log(this.videos)
+      })
     }
   }
 }
@@ -68,10 +79,11 @@ export default {
   border-radius: 5px;
   margin-bottom: 5px;
 }
-.video{
+
+.video {
   height: 100%;
   width: 100%;
   border-radius: 5px;
-  object-fit: cover;
+  object-fit: fill;
 }
 </style>
