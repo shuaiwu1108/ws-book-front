@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="10">
-    <el-col :span="4" style="padding: 15px">
+    <el-col :span="4" style="padding: 10px">
       <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange" disabled>全选</el-checkbox>
       <div style="margin: 15px 0;"></div>
       <el-checkbox-group v-model="checkedVideos" @change="handleCheckedVideoChange" :max="value">
@@ -8,7 +8,7 @@
         </el-checkbox>
       </el-checkbox-group>
     </el-col>
-    <el-col :span="20" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);padding: 15px">
+    <el-col :span="20" style="box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);padding: 10px">
       <div class="filter-container">
         分屏：
         <el-button type="primary" @click="value=1;fff()">1</el-button>
@@ -20,6 +20,7 @@
           <el-col v-for="col in cols" :span="colSpan">
             <div class="video-col" :style="'height:' + colHeight + 'px'">
               <video class="video" controls :ref="'video'+((row - 1) * cols + (col - 1))" playsinline></video>
+              <el-button class="video-button" type="info" icon="el-icon-circle-close" circle size="mini"></el-button>
             </div>
           </el-col>
         </el-row>
@@ -84,6 +85,8 @@ export default {
       this.checkAll = checkedCount === this.videos.length;
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.videos.length;
 
+      this.destroyPlay()
+
       for (let i = 0; i < checkedCount; i++) {
         this.createdPlay(i)
       }
@@ -125,7 +128,6 @@ export default {
         player.play();
 
         this.players.push(player)
-        console.log('players', this.players)
       }
     },
     destroyPlay() {
@@ -136,7 +138,6 @@ export default {
         player.detachMediaElement();
         player.destroy();
         player = null
-        console.log("销毁实例")
       }
 
       this.players = []
@@ -156,6 +157,13 @@ export default {
   width: 100%;
   border-radius: 5px;
   margin-bottom: 5px;
+  position: relative;
+}
+.video-button{
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  z-index: 1;
 }
 
 .video {
