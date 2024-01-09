@@ -38,7 +38,7 @@ export default {
   name: 'Video',
   data() {
     return {
-      value: 4,
+      value: 1,
       windowsHeight: 0,
       rows: 1,
       cols: 1,

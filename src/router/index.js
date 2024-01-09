@@ -80,6 +80,15 @@ export const routeList = {
       meta: {title: '监控视频', icon: 'el-icon-video-camera-solid'}
     }]
   },
+  webrtc: {
+    path: '/webrtc',
+    component: Layout,
+    children: [{
+      path: 'index',
+      component: () => import('@/views/video/webrtc.vue'),
+      meta: {title: 'webrtc', icon: 'el-icon-video-camera-solid'}
+    }]
+  },
   system: {
     path: '/system',
     component: Layout,
